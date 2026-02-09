@@ -20,10 +20,3 @@
   gap: 2rem;
   list-style: none;
 }
-
-.navlinks a {
-  text-decoration: none;
-  color: inherit;
-  padding: 0;
-  margin: 0;
-}

@@ -1,0 +1,85 @@
+.card {
+  background: var(--background);
+  border: 1px solid var(--button-secondary-border);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Category Accent Lines */
+.work { border: 4px double #3b82f6; }
+.personal { border: 4px double #10b981; }
+.ideas { border: 4px double #f59e0b; }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.categoryBadge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.excerpt {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Show only 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--button-secondary-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.actions { display: flex; gap: 8px; }
+
+.iconBtn, .iconBtnDelete {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  color: var(--text-secondary);
+  transition: background 0.2s;
+}
+
+.iconBtn:hover { background: var(--button-secondary-hover); color: var(--text-primary); }
+.iconBtnDelete:hover { background: #fee2e2; color: #ef4444; }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import ThemeToggle from "../toggle/page";
+import ThemeToggle from "../buttons/toggle/ThemeToggle";
 import styles from "./navbar.module.css";
 
 const Navbar = () => {
@@ -12,7 +12,7 @@ const Navbar = () => {
             <Link href="/">Home</Link>
           </li>
           <li>
-            <Link href="/about">About</Link>
+            <Link href="/notes">Notes</Link>
           </li>
         </ul>
         <ThemeToggle />
