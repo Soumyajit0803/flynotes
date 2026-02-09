@@ -1,0 +1,29 @@
+.navbar {
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--foreground);
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.navlinks {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  list-style: none;
+}
+
+.navlinks a {
+  text-decoration: none;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+}
