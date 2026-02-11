@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/navbar/Navbar";
+import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from 'sonner'
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -19,11 +21,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistMono.variable}`}>
-        <Navbar />
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={`${geistMono.variable}`}>
+          <Navbar />
+          {children}
+          <Toaster richColors position="bottom-right" />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

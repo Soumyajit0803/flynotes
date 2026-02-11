@@ -17,7 +17,6 @@ export default function CreateNotePage() {
       title: data.title || "Untitled",
       content: data.content || "",
       category: data.category || "work",
-      updatedAt: Date.now(),
     };
 
     // 3. Save back to localStorage

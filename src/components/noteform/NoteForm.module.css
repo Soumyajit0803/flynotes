@@ -106,3 +106,7 @@
 .submitBtn:active {
   transform: scale(0.98);
 }
+
+.backLink {
+  cursor: pointer;
+}
