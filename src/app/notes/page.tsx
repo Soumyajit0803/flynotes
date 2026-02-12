@@ -8,7 +8,7 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { notes } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import NoteGrid from "@/components/notegrid/NoteGrid";
 
 export default async function Notes() {
@@ -44,7 +44,6 @@ export default async function Notes() {
               <Plus size={20} /> New Note
             </Link>
             {/* This shows the user's profile picture and 'Sign Out' */}
-            <UserButton />
           </div>
         </header>
 

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import ThemeToggle from "../buttons/toggle/ThemeToggle";
 import styles from "./navbar.module.css";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { ContactRound } from "lucide-react";
 
 const Navbar = () => {
   return (
@@ -15,6 +17,26 @@ const Navbar = () => {
             <Link href="/notes">Notes</Link>
           </li>
         </ul>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+        <SignedOut>
+          <SignInButton mode="modal">
+            <button style = {{
+              color: `var(--foreground)`,
+              background: "var(--background)",
+              outline: "none",
+              border: "none",
+              padding: "8px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5rem",
+              fontSize: "1rem",
+              cursor: "pointer"
+            }}> <ContactRound size={18} /> Log in</button>
+          </SignInButton>
+        </SignedOut>
         <ThemeToggle />
       </div>
     </nav>
