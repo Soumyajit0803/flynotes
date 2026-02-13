@@ -2,7 +2,7 @@ import Link from "next/link";
 import ThemeToggle from "../buttons/toggle/ThemeToggle";
 import styles from "./navbar.module.css";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import { ContactRound } from "lucide-react";
+import { ContactRound, HomeIcon, NotebookPen } from "lucide-react";
 
 const Navbar = () => {
   return (
@@ -11,10 +11,10 @@ const Navbar = () => {
       <div className={styles.links}>
         <ul className={styles.navlinks}>
           <li>
-            <Link href="/">Home</Link>
+            <Link style={{display: "flex", alignItems: "center", gap: "0.5rem"}} href="/"><HomeIcon size={18} /> Home</Link>
           </li>
           <li>
-            <Link href="/notes">Notes</Link>
+            <Link style={{display: "flex", alignItems: "center", gap: "0.5rem"}} href="/notes"><NotebookPen size={18} /> Notes</Link>
           </li>
         </ul>
         <SignedIn>
@@ -26,7 +26,7 @@ const Navbar = () => {
               color: `var(--foreground)`,
               background: "var(--background)",
               outline: "none",
-              border: "none",
+              border: "1px solid var(--foreground)",
               padding: "8px",
               display: "flex",
               alignItems: "center",

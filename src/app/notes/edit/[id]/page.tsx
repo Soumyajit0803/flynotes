@@ -1,36 +1,46 @@
-"use client";
-
-import { useParams, useRouter } from "next/navigation";
+import { db } from "@/lib/db";
+import { notes } from "@/lib/db/schema";
+import { eq, and } from "drizzle-orm";
+import { auth } from "@clerk/nextjs/server";
+import { notFound } from "next/navigation";
 import NoteForm from "@/components/noteform/NoteForm";
 import { Note } from "@/types/note";
 
-export default function UpdateNotePage() {
-  const params = useParams(); // Hook to get the [id]
-  const router = useRouter();
-  const noteId = params.id;
 
-  // In a real app, you'd fetch the note from localStorage or a DB using the ID
-  const mockNote: Note = {
-    id: noteId as string,
-    userId: "temp-user", // ADD THIS
-    title: "Existing Note",
-    content: "Content to edit",
-    category: "work", // Ensure this matches your "Category" type (likely capital W)
-    createdAt: new Date(), // ADD THIS
-    updatedAt: new Date(),
-  };
+export default async function UpdateNotePage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  // Security: Get the current user
+  const { userId } = await auth();
+  const { id } = await params;
 
-  const handleUpdate = (updatedData: Partial<Note>) => {
-    console.log("Updating note", noteId, updatedData);
-    // Logic to save change goes here
-    router.push("/notes");
-  };
+  if (!userId) return <div>Please sign in.</div>;
+
+  // Fetch real data from Neon
+  const [note] = await db
+    .select()
+    .from(notes)
+    .where(
+      and(
+        eq(notes.id, id), 
+        eq(notes.userId, userId) // Ensure I can't edit someone else's note
+      )
+    );
+
+  // 4. If note doesn't exist, show 404
+  if (!note) {
+    notFound();
+  }
 
   return (
-    <NoteForm
-      initialData={mockNote}
-      onSubmit={handleUpdate}
-      titleText="Edit Note"
-    />
+    <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
+      {/* We pass the real database note to the form */}
+      <NoteForm 
+        initialData={note as Note} 
+        titleText="Edit Note" 
+      />
+    </div>
   );
 }

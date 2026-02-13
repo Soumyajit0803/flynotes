@@ -32,12 +32,14 @@ export default function ThemeToggle() {
       style={{
         padding: "0.5rem",
         cursor: "pointer",
-        borderRadius: "100%",
+        borderRadius: "50%",
         border: "1px solid var(--foreground)",
         background: "var(--background)",
         color: "var(--foreground)",
         transition: "all 0.2s ease",
-        lineHeight: "1em"
+        lineHeight: "1em",
+        outline: "none",
+
       }}
     >
       {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}

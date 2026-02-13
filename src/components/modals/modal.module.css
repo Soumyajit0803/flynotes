@@ -1,0 +1,64 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Darkens the background */
+  backdrop-filter: blur(4px); /* Blurs the background content */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+  background: var(--background);
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  animation: scaleUp 0.2s ease-out;
+  border: 1px solid var(--foreground);
+}
+
+.iconWrapper {
+  margin-bottom: 1rem;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cancelBtn,
+.confirmBtn {
+  padding: 0.8rem;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  width: 50%;
+  font-family: inherit;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes scaleUp {
+  from {
+    transform: scale(0.95);
+  }
+  to {
+    transform: scale(1);
+  }
+}

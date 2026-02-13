@@ -4,20 +4,19 @@ import { useState } from "react";
 import { ChevronDown, Save } from "lucide-react";
 import styles from "./NoteForm.module.css";
 import { Category, Note } from "@/types/note";
-import { createNoteAction } from "@/lib/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { createNoteAction, updateNoteAction } from "@/lib/actions";
 import Link from "next/link";
+import ConfirmModal from "../modals/ConfirmModal";
 
 interface NoteFormProps {
   initialData?: Note;
-  onSubmit: (data: Partial<Note>) => void;
   titleText: string;
 }
 
 export default function NoteForm({
   initialData,
-  onSubmit,
   titleText,
 }: NoteFormProps) {
   const [title, setTitle] = useState(initialData?.title || "");
@@ -25,27 +24,42 @@ export default function NoteForm({
   const [category, setCategory] = useState<Category>(
     initialData?.category || "work",
   );
-  const [loading, setLoading] = useState(false);
+
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal State
+  const [loading, setLoading] = useState(false); // Loading State
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleOpenModal = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsModalOpen(true);
+  };
+  const handleConfirmSave = async () => {
+    setIsModalOpen(false);
     setLoading(true);
 
-    const result = await createNoteAction({ title, content, category });
+    const noteData = { title, content, category };
+    let result;
+
+    if (initialData?.id) {
+      result = await updateNoteAction(initialData.id, noteData);
+    } else {
+      result = await createNoteAction(noteData);
+    }
 
     if (result.success) {
-      toast.success("Note created successfully!");
-      router.push("/notes"); // Redirect happens AFTER the toast is triggered
+      toast.success(initialData ? "Note updated!" : "Note created!");
+      router.push("/notes");
     } else {
-      toast.error("Failed to create note");
+      toast.error(result.error || "Failed to save note");
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
-    <p onClick={() => router.back()} className={styles.backLink}>← Back to Notes</p>
+    <form onSubmit={handleOpenModal} className={styles.form}>
+      <p onClick={() => router.back()} className={styles.backLink}>
+        ← Back to Notes
+      </p>
       <h1>{titleText}</h1>
 
       <div className={styles.field}>
@@ -84,7 +98,13 @@ export default function NoteForm({
       <button type="submit" className={styles.submitBtn}>
         <Save size={18} /> {initialData ? "Update Note" : "Create Note"}
       </button>
-      
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirmSave}
+        title={title}
+        type={initialData ? "update" : "create"}
+      />
     </form>
   );
 }
