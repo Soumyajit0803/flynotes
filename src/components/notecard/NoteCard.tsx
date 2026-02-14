@@ -10,11 +10,6 @@ import { toast } from "sonner";
 import { useState } from "react";
 
 export default function NoteCard({ note }: { note: Note }) {
-  // Format the date (assuming note.updatedAt is a timestamp)
-  const formattedDate = new Date(note.updatedAt).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDeleteConfirm = async () => {

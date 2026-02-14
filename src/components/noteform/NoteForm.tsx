@@ -7,7 +7,6 @@ import { Category, Note } from "@/types/note";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { createNoteAction, updateNoteAction } from "@/lib/actions";
-import Link from "next/link";
 import ConfirmModal from "../modals/ConfirmModal";
 
 interface NoteFormProps {
@@ -26,7 +25,6 @@ export default function NoteForm({
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal State
-  const [loading, setLoading] = useState(false); // Loading State
   const router = useRouter();
 
   const handleOpenModal = (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,7 +33,6 @@ export default function NoteForm({
   };
   const handleConfirmSave = async () => {
     setIsModalOpen(false);
-    setLoading(true);
 
     const noteData = { title, content, category };
     let result;
@@ -51,7 +48,6 @@ export default function NoteForm({
       router.push("/notes");
     } else {
       toast.error(result.error || "Failed to save note");
-      setLoading(false);
     }
   };
 

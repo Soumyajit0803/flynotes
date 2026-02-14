@@ -1,5 +1,4 @@
 import pageStyles from "@/app/page.module.css";
-import NoteCard from "@/components/notecard/NoteCard"; // Make sure to create this component
 import styles from "./notes.module.css"; // Create this for the grid layout
 import { Note } from "@/types/note";
 import { LockIcon, Plus } from "lucide-react";

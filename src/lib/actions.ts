@@ -17,8 +17,9 @@ export async function createNoteAction(data: { title: string; content: string; c
     revalidatePath("/notes"); 
     
     return { success: true }; // Return a "Signal" instead of redirecting
-  } catch (e) {
-    return { success: false, error: "Database error" };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "An unexpected error occurred";
+    return { success: false, error: `${message}` };
   }
 }
 
@@ -40,8 +41,9 @@ export async function updateNoteAction(
 
     revalidatePath("/notes");
     return { success: true };
-  } catch (e) {
-    return { success: false };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "An unexpected error occurred";
+    return { success: false, error: `${message}` };
   }
 }
 
@@ -66,7 +68,7 @@ export async function deleteNoteAction(noteId: string) {
     revalidatePath("/notes");
     return { success: true };
   } catch (error) {
-    console.error("Delete failed:", error);
-    return { success: false, error: "Database error" };
+    const message = error instanceof Error ? error.message : "An unexpected error occurred";
+    return { success: false, error: `${message}` };
   }
 }

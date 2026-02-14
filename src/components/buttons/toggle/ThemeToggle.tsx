@@ -1,22 +1,41 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon } from "lucide-react";
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [mounted, setMounted] = useState(false);
 
   // 1. On mount, check if user has a preference saved or use system default
+  // 1. Handle initial mounting
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    const systemPrefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-
-    const initialTheme = savedTheme || (systemPrefersDark ? "dark" : "light");
-    setTheme(initialTheme);
-    document.documentElement.setAttribute("data-theme", initialTheme);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
   }, []);
+
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    // 1. Since this runs during the very first render, we check for 'window'
+    // (to prevent Next.js server-side errors)
+    if (typeof window !== "undefined") {
+      const savedTheme = localStorage.getItem("theme") as
+        | "light"
+        | "dark"
+        | null;
+      const systemPrefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches;
+      return savedTheme || (systemPrefersDark ? "dark" : "light");
+    }
+    return "light"; // Default for Server-Side Rendering
+  });
+
+  // 2. Now the useEffect ONLY handles the DOM attribute side-effect
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  // Don't render UI that depends on 'theme' until mounted
+  if (!mounted) return null;
 
   // 2. Function to switch themes
   const toggleTheme = () => {
@@ -39,10 +58,9 @@ export default function ThemeToggle() {
         transition: "all 0.2s ease",
         lineHeight: "1em",
         outline: "none",
-
       }}
     >
-      {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+      {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
     </button>
   );
 }

@@ -20,17 +20,22 @@ export default function DeleteModal({
 }: DeleteModalProps) {
   const [mounted, setMounted] = useState(false);
 
-  // Portals need to wait until the component is "mounted" on the client
+  // 1. Handle Mounting (runs once when the component first appears)
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
+  }, []);
 
+  // 2. Handle Scroll Lock (runs every time isOpen changes)
+  useEffect(() => {
     if (isOpen) {
-      // Disable scrolling on the body when modal opens
       document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
     }
 
+    // Cleanup: ensure scroll is restored if the component is removed
     return () => {
-      // Re-enable scrolling when modal closes or unmounts
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
@@ -45,7 +50,7 @@ export default function DeleteModal({
         </div>
         <h2>Delete Note?</h2>
         <p>
-          Are you sure you want to delete <strong>"{title}"</strong>?
+          Are you sure you want to delete <strong>;&quot{title};&quot</strong>?
         </p>
 
         <div className={styles.actions}>
