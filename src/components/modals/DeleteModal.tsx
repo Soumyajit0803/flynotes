@@ -50,7 +50,7 @@ export default function DeleteModal({
         </div>
         <h2>Delete Note?</h2>
         <p>
-          Are you sure you want to delete <strong>;&quot{title};&quot</strong>?
+          Are you sure you want to delete <strong> &quot;{title}&quot; </strong>?
         </p>
 
         <div className={styles.actions}>

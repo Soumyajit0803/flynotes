@@ -37,7 +37,8 @@
 }
 
 .cancelBtn,
-.confirmBtn {
+.confirmBtn,
+.deleteBtn {
   padding: 0.8rem;
   border: none;
   font-weight: 600;
