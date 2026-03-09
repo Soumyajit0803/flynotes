@@ -19,31 +19,14 @@
   gap: 1.5rem;
 }
 
-.newNoteBtn {
-  text-decoration: none;
-  color: inherit;
-  line-height: 1em;
-  border: 1.5px solid var(--foreground);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
-  padding: 0.5rem;
-  font-size: 1rem;
-  background: var(--background);
-  cursor: pointer;
-}
-
 /* notes.module.css */
 
 .skeletonCard {
   background: #f0f0f0;
-  border-radius: 12px;
   padding: 20px;
-  height: 180px;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  gap: 5px;
+  height: 7rem;
   position: relative;
   overflow: hidden;
 }
@@ -71,18 +54,4 @@
   100% {
     transform: translateX(100%);
   }
-}
-
-.skeletonLineShort {
-  width: 40%;
-  height: 12px;
-  background: #e0e0e0;
-  border-radius: 4px;
-}
-
-.skeletonLineLong {
-  width: 100%;
-  height: 12px;
-  background: #e0e0e0;
-  border-radius: 4px;
 }

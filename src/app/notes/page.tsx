@@ -9,45 +9,52 @@ import { notes } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import NoteGrid from "@/components/notegrid/NoteGrid";
+import Loading from "./loading";
 
-export default async function Notes() {
-  const { userId } = await auth();
+// export default async function Notes() {
+//   const { userId } = await auth();
 
-  let userNotes: Note[] = [];
-  if (userId) {
-    userNotes = (await db
-      .select()
-      .from(notes)
-      .where(eq(notes.userId, userId))) as Note[];
-  }
+//   let userNotes: Note[] = [];
+//   if (userId) {
+//     userNotes = (await db
+//       .select()
+//       .from(notes)
+//       .where(eq(notes.userId, userId))) as Note[];
+//   }
 
-  return (
-    <main className={pageStyles.main}>
-      {/* 1. If User is NOT logged in */}
-      <SignedOut>
-        <div className={styles.loginContainer}>
-          <p>You need to be logged in to see your notes</p>
-          <br />
-          <SignInButton mode="modal">
-            <button className={styles.newNoteBtn}> <LockIcon size={20} /> Sign In to Flynotes</button>
-          </SignInButton>
-        </div>
-      </SignedOut>
+//   return (
+//     <main className={pageStyles.main}>
+//       {/* 1. If User is NOT logged in */}
+//       <SignedOut>
+//         <div className={styles.loginContainer}>
+//           <p>You need to be logged in to see your notes</p>
+//           <br />
+//           <SignInButton mode="modal">
+//             <button className={styles.newNoteBtn}> <LockIcon size={20} /> Sign In to Flynotes</button>
+//           </SignInButton>
+//         </div>
+//       </SignedOut>
 
-      {/* 2. If User IS logged in */}
-      <SignedIn>
-        <header className={styles.header}>
-          <h2>Your Notes</h2>
-          <div className={styles.headerActions}>
-            <Link href="/notes/create" className={styles.newNoteBtn}>
-              <Plus size={20} /> New Note
-            </Link>
-            {/* This shows the user's profile picture and 'Sign Out' */}
-          </div>
-        </header>
+//       {/* 2. If User IS logged in */}
+//       <SignedIn>
+//         <header className={styles.header}>
+//           <h2>Your Notes</h2>
+//           <div className={styles.headerActions}>
+//             <Link href="/notes/create" className={styles.newNoteBtn}>
+//               <Plus size={20} /> New Note
+//             </Link>
+//             {/* This shows the user's profile picture and 'Sign Out' */}
+//           </div>
+//         </header>
 
-        {userId && <NoteGrid data={userNotes} />}
-      </SignedIn>
-    </main>
-  );
+//         {userId && <NoteGrid data={userNotes} />}
+//       </SignedIn>
+//     </main>
+//   );
+// }
+
+import { redirect } from "next/navigation";
+
+export default function NotesPage() {
+  redirect("/"); // Automatically send people to the new unified home
 }
