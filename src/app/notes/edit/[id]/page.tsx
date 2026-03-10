@@ -4,10 +4,23 @@ import NoteForm from "@/components/noteform/NoteForm";
 import { Note } from "@/types/note";
 import { getNoteByIdAction } from "@/lib/actions";
 
-export default async function UpdateNotePage({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const note = await getNoteByIdAction(id);
+
+  return {
+    title: note ? `Editing: ${note.title}` : "Note Not Found",
+  };
+}
+
+export default async function UpdateNotePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
 }) {
   // Security: Get the current user
   const { userId } = await auth();
@@ -24,10 +37,7 @@ export default async function UpdateNotePage({
   return (
     <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
       {/* We pass the real database note to the form */}
-      <NoteForm 
-        initialData={note as Note} 
-        titleText="Edit Note" 
-      />
+      <NoteForm initialData={note as Note} titleText="Edit Note" />
     </div>
   );
 }

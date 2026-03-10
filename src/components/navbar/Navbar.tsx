@@ -17,7 +17,7 @@ const Navbar = () => {
                 userButtonAvatarBox: {
                   width: "2.4rem", // Custom width
                   height: "2.4rem", // Custom height
-                  border: "1px solid #000000",
+                  border: "1px solid var(--foreground)",
                 },
               },
             }}

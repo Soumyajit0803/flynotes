@@ -56,8 +56,12 @@ export default function ThemeToggle() {
         background: "var(--background)",
         color: "var(--foreground)",
         transition: "all 0.2s ease",
-        lineHeight: "1em",
+        height: "2.4rem",
+        width: "2.4rem",
         outline: "none",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
