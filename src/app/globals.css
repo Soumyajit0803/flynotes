@@ -10,6 +10,17 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Light Mode Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #bababa;
+  --text-primary: #000000;
+  --text-secondary: #454545;
+  --border-color: #e5e7eb;
+  
+  /* Skeleton Specific */
+  --skeleton-bg: #eeeeee;
+  --skeleton-shimmer: rgba(255, 255, 255, 0.5);
 }
 
 html {
@@ -39,5 +50,15 @@ a {
   :root:not([data-theme="light"]) {
     --background: #0a0a0a;
     --foreground: #ededed;
+    /* Dark Mode Colors */
+    --bg-primary: #313131;
+    --bg-secondary: #3d3d3d;
+    --text-primary: #ffffff;
+    --text-secondary: #dbdbdb;
+    --border-color: #595959;
+
+    /* Skeleton Specific */
+    --skeleton-bg: #414141;
+    --skeleton-shimmer: rgba(255, 255, 255, 0.05);
   }
 }

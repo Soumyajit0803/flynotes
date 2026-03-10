@@ -2,15 +2,12 @@ import styles from "./page.module.css";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
 import NotesGrid from "@/components/notegrid/NoteGrid"; // Adjust path as needed
-import { Note } from "@/types/note";
-import { auth } from "@clerk/nextjs/server";
-import { db } from "@/lib/db";
-import { notes } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { fetchNotesAction } from "@/lib/actions";
+import { Plus } from "lucide-react";
 
 function AboutFlynotes() {
   return (
-    <main className={styles.main}>
+    <main>
       <h2 className={styles.title}>Welcome to FlyNotes</h2>
       <p>
         <br />
@@ -23,25 +20,16 @@ function AboutFlynotes() {
 }
 
 export default async function HomePage() {
-  const { userId } = await auth();
+  const userNotes = await fetchNotesAction();
 
-  let userNotes: Note[] = [];
-  if (userId) {
-    userNotes = (await db
-      .select()
-      .from(notes)
-      .where(eq(notes.userId, userId))) as Note[];
-  }
   return (
     <main className={styles.main}>
-      {/* 1. If user is NOT logged in, show the "jargon" / description */}
       <SignedOut>
         <AboutFlynotes /> 
       </SignedOut>
 
-      {/* 2. If user IS logged in, show the actual application dashboard */}
       <SignedIn>
-        <section className="container mx-auto p-6">
+        <section className="container">
           <header style={{
             display: "flex",
             justifyContent: "space-between",
@@ -50,11 +38,11 @@ export default async function HomePage() {
           }}>
             <h1 className={styles.title}>My Notes</h1>
             <Link href="/notes/create" className={styles.newNoteBtn}>
-              + New Note
+              <Plus size={18} /> New Note
             </Link>
           </header>
           
-          <NotesGrid data={userNotes} />
+          <NotesGrid data={userNotes?.data} />
         </section>
       </SignedIn>
     </main>

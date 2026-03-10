@@ -1,6 +1,6 @@
 'use client';
 
-import styles from "@/app/notes/notes.module.css";
+import styles from "./notegrid.module.css";
 import { Note } from "@/types/note";
 import NoteCard from "../notecard/NoteCard";
 

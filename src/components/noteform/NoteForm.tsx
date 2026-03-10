@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Save } from "lucide-react";
+import { ChevronDown, Loader, Save } from "lucide-react";
 import styles from "./NoteForm.module.css";
 import { Category, Note } from "@/types/note";
 import { toast } from "sonner";
@@ -25,6 +25,7 @@ export default function NoteForm({
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal State
+  const [loading, setLoading] = useState(false); // Loading State for form submission
   const router = useRouter();
 
   const handleOpenModal = (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,6 +34,7 @@ export default function NoteForm({
   };
   const handleConfirmSave = async () => {
     setIsModalOpen(false);
+    setLoading(true);
 
     const noteData = { title, content, category };
     let result;
@@ -91,9 +93,15 @@ export default function NoteForm({
         />
       </div>
 
-      <button type="submit" className={styles.submitBtn}>
-        <Save size={18} /> {initialData ? "Update Note" : "Create Note"}
-      </button>
+      {loading ? (
+        <button className={styles.submitBtn} style={{cursor: "not-allowed"}} disabled >
+          <Loader size={18} /> Saving...
+        </button>
+      ) : (
+        <button type="submit" className={styles.submitBtn}>
+          <Save size={18} /> {initialData ? "Update Note" : "Create Note"}
+        </button>
+      )}
       <ConfirmModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

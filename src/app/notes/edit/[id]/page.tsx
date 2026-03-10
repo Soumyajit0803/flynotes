@@ -1,11 +1,8 @@
-import { db } from "@/lib/db";
-import { notes } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
 import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
 import NoteForm from "@/components/noteform/NoteForm";
 import { Note } from "@/types/note";
-
+import { getNoteByIdAction } from "@/lib/actions";
 
 export default async function UpdateNotePage({ 
   params 
@@ -15,19 +12,9 @@ export default async function UpdateNotePage({
   // Security: Get the current user
   const { userId } = await auth();
   const { id } = await params;
+  const note = await getNoteByIdAction(id);
 
   if (!userId) return <div>Please sign in.</div>;
-
-  // Fetch real data from Neon
-  const [note] = await db
-    .select()
-    .from(notes)
-    .where(
-      and(
-        eq(notes.id, id), 
-        eq(notes.userId, userId) // Ensure I can't edit someone else's note
-      )
-    );
 
   // 4. If note doesn't exist, show 404
   if (!note) {

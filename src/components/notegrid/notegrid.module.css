@@ -1,0 +1,7 @@
+.notesGrid {
+  display: grid;
+  width: 100%;
+  /* This creates a responsive grid without media queries! */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}

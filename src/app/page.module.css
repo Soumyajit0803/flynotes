@@ -16,7 +16,7 @@
   text-decoration: none;
   color: inherit;
   line-height: 1em;
-  border: 1.5px solid var(--foreground);
+  border: 1.5px solid var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;

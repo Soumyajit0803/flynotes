@@ -1,8 +1,7 @@
-import Link from "next/link";
 import ThemeToggle from "../buttons/toggle/ThemeToggle";
 import styles from "./navbar.module.css";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import { ContactRound, HomeIcon, NotebookPen } from "lucide-react";
+import { ContactRound } from "lucide-react";
 
 const Navbar = () => {
   return (
