@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { ChevronDown, Loader, Save } from "lucide-react";
 import styles from "./NoteForm.module.css";
 import { Category, Note } from "@/types/note";
@@ -25,8 +25,9 @@ export default function NoteForm({
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal State
-  const [loading, setLoading] = useState(false); // Loading State for form submission
   const router = useRouter();
+
+  const [isPending, startTransition] = useTransition();
 
   const handleOpenModal = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,28 +35,33 @@ export default function NoteForm({
   };
   const handleConfirmSave = async () => {
     setIsModalOpen(false);
-    setLoading(true);
-
-    const noteData = { title, content, category };
-    let result;
-
-    if (initialData?.id) {
-      result = await updateNoteAction(initialData.id, noteData);
-    } else {
-      result = await createNoteAction(noteData);
-    }
-
-    if (result.success) {
-      toast.success(initialData ? "Note updated!" : "Note created!");
-      router.push("/notes");
-    } else {
-      toast.error(result.error || "Failed to save note");
-    }
+    startTransition(async()=>{
+      const noteData = { title, content, category };
+      let result;
+  
+      if (initialData?.id) {
+        result = await updateNoteAction(initialData.id, noteData);
+      } else {
+        result = await createNoteAction(noteData);
+      }
+  
+      if (result.success) {
+        toast.success(initialData ? "Note updated!" : "Note created!");
+        router.push("/");
+      } else {
+        toast.error(result.error || "Failed to save note");
+      }
+    })
   };
 
   return (
     <form onSubmit={handleOpenModal} className={styles.form}>
-      <p onClick={() => router.back()} className={styles.backLink}>
+      <p onClick={() => !isPending && router.back()} 
+        className={styles.backLink}
+          style={{cursor: isPending ? "not-allowed" : "pointer",
+                opacity: isPending ? 0.5 : 1
+          }}
+        >
         ← Back to Notes
       </p>
       <h1>{titleText}</h1>
@@ -66,6 +72,8 @@ export default function NoteForm({
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
+          disabled={isPending}
+          style={{ cursor: isPending ? "not-allowed" : "text", opacity: isPending ? 0.5 : 1 }}
         />
       </div>
 
@@ -75,6 +83,8 @@ export default function NoteForm({
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value as Category)}
+            disabled={isPending}
+          style={{ cursor: isPending ? "not-allowed" : "text", opacity: isPending ? 0.7 : 1 }}
           >
             <option value="Work">Work</option>
             <option value="Personal">Personal</option>
@@ -90,10 +100,12 @@ export default function NoteForm({
           value={content}
           onChange={(e) => setContent(e.target.value)}
           required
+          disabled={isPending}
+          style={{ cursor: isPending ? "not-allowed" : "text", opacity: isPending ? 0.7 : 1 }}
         />
       </div>
 
-      {loading ? (
+      {isPending ? (
         <button className={styles.submitBtn} style={{cursor: "not-allowed"}} disabled >
           <Loader size={18} /> Saving...
         </button>

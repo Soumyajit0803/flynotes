@@ -37,7 +37,7 @@ export default async function HomePage() {
             marginBottom: "2rem"
           }}>
             <h1 className={styles.title}>My Notes</h1>
-            <Link href="/notes/create" className={styles.newNoteBtn}>
+            <Link href="/create" className={styles.newNoteBtn}>
               <Plus size={18} /> New Note
             </Link>
           </header>

@@ -8,29 +8,47 @@ import { Note } from "@/types/note";
 import Link from "next/link";
 import styles from "./notecard.module.css";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
-export default function NoteCard({ note }: { note: Note }) {
+export default function NoteCard({
+  note,
+  onOptimisticDelete,
+}: {
+  note: Note;
+  onOptimisticDelete: (noteId: string) => void;
+}) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  // The "Immediate Revert" Problem: The setter function returned by useOptimistic is designed to be active only while an asynchronous update is "pending". If you call it outside of a transition, React will update the UI for a fraction of a second and then immediately revert it back to the original state because there is no ongoing background task to "hold" the optimistic value.
+  // useOptimistic cannot function without a Transition (or an Action) because of how React manages temporary states.
 
   const handleDeleteConfirm = async () => {
     setIsDeleteModalOpen(false);
     const toastId = toast.loading("Deleting...");
-    const result = await deleteNoteAction(note.id);
-    if (result.success) {
-      toast.success("Deleted", { id: toastId });
-    } else {
-      toast.error("Failed", { id: toastId });
-    }
+    startTransition(async() =>{
+      // Anything inside this startTransition callback will be considered non-urgent and can be interrupted if the user starts another transition.
+
+      // instant fake task
+      onOptimisticDelete(note.id);
+
+      // slow original task
+      const result = await deleteNoteAction(note.id);
+      if (result.success) {
+        toast.success("Deleted", { id: toastId });
+      } else {
+        toast.error("Failed", { id: toastId });
+      }
+    })
   };
 
   return (
     <>
-      <div 
+      <div
         className={`${styles.card} ${styles[note.category.toLowerCase()]}`}
         onClick={() => setIsViewModalOpen(true)} // Open full note on click
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: "pointer" }}
       >
         <div className={styles.header}>
           <span className={styles.categoryBadge}>
@@ -40,7 +58,7 @@ export default function NoteCard({ note }: { note: Note }) {
 
           <div className={styles.actions} onClick={(e) => e.stopPropagation()}>
             {/* stopPropagation prevents the View Modal from opening when clicking buttons */}
-            <Link href={`/notes/edit/${note.id}`} className={styles.iconBtn}>
+            <Link href={`/edit/${note.id}`} className={styles.iconBtn}>
               <Edit3 size={16} />
             </Link>
 
@@ -78,7 +96,7 @@ export default function NoteCard({ note }: { note: Note }) {
         title={note.title}
       />
 
-      <ViewNoteModal 
+      <ViewNoteModal
         isOpen={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}
         note={note}
