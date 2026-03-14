@@ -28,12 +28,20 @@ export default function NoteForm({
   const router = useRouter();
 
   const [isPending, startTransition] = useTransition();
-
+  
+  const isDirty = 
+    title.trim() !== initialData?.title || 
+    content.trim() !== initialData?.content || 
+    category !== initialData?.category;
   const handleOpenModal = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!isDirty) return toast.warning("No changes to save");
     setIsModalOpen(true);
   };
+
+
   const handleConfirmSave = async () => {
+    
     setIsModalOpen(false);
     startTransition(async()=>{
       const noteData = { title, content, category };

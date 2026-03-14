@@ -12,6 +12,10 @@
   padding: 2rem;
 }
 
+.container {
+  width: 100%;
+}
+
 .newNoteBtn {
   text-decoration: none;
   color: inherit;

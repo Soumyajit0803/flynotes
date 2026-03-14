@@ -9,6 +9,7 @@ import Link from "next/link";
 import styles from "./notecard.module.css";
 import { toast } from "sonner";
 import { useState, useTransition } from "react";
+import { Sparkles } from "lucide-react";
 
 export default function NoteCard({
   note,
@@ -21,13 +22,20 @@ export default function NoteCard({
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
+  // 1. Check if this note was returned from a semantic search
+  const isSearchMatch = note.similarity !== undefined;
+  const matchPercentage = isSearchMatch
+    ? Math.round(note.similarity! * 100)
+    : 0;
+  console.log(matchPercentage)
+
   // The "Immediate Revert" Problem: The setter function returned by useOptimistic is designed to be active only while an asynchronous update is "pending". If you call it outside of a transition, React will update the UI for a fraction of a second and then immediately revert it back to the original state because there is no ongoing background task to "hold" the optimistic value.
   // useOptimistic cannot function without a Transition (or an Action) because of how React manages temporary states.
 
   const handleDeleteConfirm = async () => {
     setIsDeleteModalOpen(false);
     const toastId = toast.loading("Deleting...");
-    startTransition(async() =>{
+    startTransition(async () => {
       // Anything inside this startTransition callback will be considered non-urgent and can be interrupted if the user starts another transition.
 
       // instant fake task
@@ -40,7 +48,7 @@ export default function NoteCard({
       } else {
         toast.error("Failed", { id: toastId });
       }
-    })
+    });
   };
 
   return (
@@ -71,7 +79,15 @@ export default function NoteCard({
           </div>
         </div>
 
-        <h3 className={styles.title}>{note.title}</h3>
+        <h3 className={styles.title}>
+          {note.title}{" "}
+        </h3>
+        {isSearchMatch && (
+          <div className={styles.matchBadge}>
+            <Sparkles size={12} className={styles.sparkleIcon} />
+            <span>{matchPercentage}% Match</span>
+          </div>
+        )}
         <p className={styles.excerpt}>{note.content}</p>
 
         <div className={styles.footer}>

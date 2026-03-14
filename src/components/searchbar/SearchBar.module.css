@@ -1,0 +1,91 @@
+/* SearchBar.module.css */
+.searchContainer {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
+}
+
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05); /* Slight glassmorphism */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px; /* Perfect pill shape */
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.searchWrapper:focus-within {
+  border-color: #6366f1; /* Indigo glow on focus */
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.searchIcon {
+  color: #9ca3af;
+  margin-right: 0.75rem;
+}
+
+.searchInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: inherit;
+  font-size: 1rem;
+}
+
+.searchInput::placeholder {
+  color: #6b7280;
+}
+
+.loadingIcon {
+  color: #6366f1;
+  animation: spin 1s linear infinite;
+}
+
+/* Add these to your SearchBar.module.css */
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background-color: rgba(255, 255, 255, 0.1); /* Adjust if using a light theme */
+  margin: 0 1rem;
+}
+
+.limitWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #9ca3af;
+}
+
+.limitIcon {
+  flex-shrink: 0;
+}
+
+.limitSelect {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 0.875rem;
+  outline: none;
+  cursor: pointer;
+  appearance: none; /* Removes the ugly default browser arrow */
+}
+
+.limitSelect:focus {
+  color: #6366f1; /* Indigo focus state */
+}
+
+/* Add a custom SVG arrow background if you want to replace the native appearance */
+.limitSelect option {
+  background-color: #1f2937; /* Dark background for dropdown options so they are readable */
+  color: #fff;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

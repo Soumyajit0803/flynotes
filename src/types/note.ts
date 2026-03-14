@@ -7,4 +7,5 @@ export interface Note {
   category: Category; // Match your categories
   createdAt: Date; // Changed from number to Date
   updatedAt: Date; // Changed from number to Date
+  similarity?: number;
 }
