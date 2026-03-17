@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { notes } from "@/lib/db/schema";
 import { Note } from "@/types/note";
 import { auth } from "@clerk/nextjs/server";
-import { desc, sql, SQL, isNull } from "drizzle-orm";
+import { desc, sql, SQL } from "drizzle-orm";
 import { and, eq, ilike, or } from "drizzle-orm/sql/expressions/conditions";
 import { revalidatePath } from "next/cache";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -22,29 +22,35 @@ export async function getNotesByQueryAction(
   if (!searchQuery || searchQuery.trim() === "") {
     // return everything
     const filters: SQL[] = [eq(notes.userId, userId)];
-    const userNotes = await db
-      .select({
-        id: notes.id,
-        title: notes.title,
-        content: notes.content,
-        category: notes.category,
-        updatedAt: notes.updatedAt,
-      })
-      .from(notes)
-      .where(and(...filters))
-      .orderBy(desc(notes.updatedAt));
-    return { success: true, data: userNotes as Note[], error: "" };
+
+    try {
+      const userNotes = await db
+        .select({
+          id: notes.id,
+          title: notes.title,
+          content: notes.content,
+          category: notes.category,
+          updatedAt: notes.updatedAt,
+        })
+        .from(notes)
+        .where(and(...filters))
+        .orderBy(desc(notes.updatedAt));
+      return { success: true, data: userNotes as Note[], error: "" };
+    } catch (error) {
+      return {
+        success: false,
+        data: [] as Note[],
+        error: "Database error. Please try again later.",
+      };
+    }
   }
-
-  console.log("Search Query:", searchQuery);
-  console.log("Limit Amount:", limitAmount);
-
-  // 1. Embed the search query using Gemini
-
   try {
+    // Generate embedding for the search query using Gemini
     const model = genAI.getGenerativeModel({ model: "gemini-embedding-001" });
     const result = await model.embedContent(searchQuery);
     const searchVector = result.embedding.values;
+
+    // Calculate cosine similarity and order by it
     const distance = sql`${notes.embedding} <=> ${JSON.stringify(searchVector)}::vector`;
 
     const userNotes = await db
@@ -58,7 +64,6 @@ export async function getNotesByQueryAction(
       })
       .from(notes)
       .where(eq(notes.userId, userId))
-      // The `<=>` operator still works perfectly here
       .orderBy(
         sql`${notes.embedding} <=> ${JSON.stringify(searchVector)}::vector`,
       )
@@ -66,33 +71,45 @@ export async function getNotesByQueryAction(
 
     return { success: true, data: userNotes as Note[], error: "" };
   } catch (error) {
-    // console.error("Gemini API Error, degrading to standard search:\n", error);
-    const searchPattern = `%${searchQuery}%`;
-    const fallbackNotes = await db
-      .select({
-        id: notes.id,
-        title: notes.title,
-        content: notes.content,
-        category: notes.category,
-        updatedAt: notes.updatedAt,
-      })
-      .from(notes)
-      .where(
-        and(
-          eq(notes.userId, userId),
-          or(
-            ilike(notes.title, searchPattern),
-            ilike(notes.content, searchPattern),
-            ilike(notes.category, searchPattern),
-          )
-        )
-      )
-      .orderBy(
-        desc(notes.updatedAt)
-      )
-      .limit(limitAmount);
+    // fallback to simple keyword search
 
-    return { success: true, data: fallbackNotes as Note[], error: "AI search temporarily unavailable. Showing standard keyword search results." };
+    try {
+      const searchPattern = `%${searchQuery}%`;
+      const fallbackNotes = await db
+        .select({
+          id: notes.id,
+          title: notes.title,
+          content: notes.content,
+          category: notes.category,
+          updatedAt: notes.updatedAt,
+        })
+        .from(notes)
+        .where(
+          and(
+            eq(notes.userId, userId),
+            or(
+              ilike(notes.title, searchPattern),
+              ilike(notes.content, searchPattern),
+              ilike(notes.category, searchPattern),
+            ),
+          ),
+        )
+        .orderBy(desc(notes.updatedAt))
+        .limit(limitAmount);
+
+      return {
+        success: true,
+        data: fallbackNotes as Note[],
+        error:
+          "AI search temporarily unavailable. Showing standard keyword search results.",
+      };
+    } catch (fallbackError) {
+      return {
+        success: false,
+        data: [] as Note[],
+        error: "Database error. Please try again later.",
+      };
+    }
   }
 }
 
@@ -104,12 +121,11 @@ export async function createNoteAction(data: {
   const { userId } = await auth();
   if (!userId) return { success: false, error: "User not found" };
 
+  // get the embedding vector from Gemini for the search text
   const textToEmbed = `Title: ${data.title}. Content: ${data.content}`;
-  // 1. Get the Gemini embedding model
   const model = genAI.getGenerativeModel({ model: "gemini-embedding-001" });
-  // 2. Generate the semantic vector
   const result = await model.embedContent(textToEmbed);
-  const embeddingVector = result.embedding.values; // array of 768 floats
+  const embeddingVector = result.embedding.values;
 
   try {
     // 3. Save to Neon using Drizzle

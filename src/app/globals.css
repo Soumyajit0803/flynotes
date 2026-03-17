@@ -21,6 +21,13 @@
   /* Skeleton Specific */
   --skeleton-bg: #eeeeee;
   --skeleton-shimmer: rgba(255, 255, 255, 0.5);
+
+  --work: #3b82f6;
+  --personal: #10b981;
+  --ideas: #f59e0b;
+  --work-bg: rgba(59, 130, 246, 0.1);
+  --personal-bg: rgba(16, 185, 129, 0.1);
+  --ideas-bg: rgba(245, 158, 11, 0.1);
 }
 
 html {

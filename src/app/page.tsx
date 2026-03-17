@@ -6,6 +6,7 @@ import { getNotesByQueryAction } from "@/lib/actions";
 import SearchBar from "@/components/searchbar/SearchBar";
 import { Plus } from "lucide-react";
 import { Note } from "@/types/note";
+import EmptyStateCard from "@/components/emptystate/EmptyState";
 
 function AboutFlynotes() {
   return (
@@ -29,8 +30,6 @@ export default async function HomePage({
   const resolvedParams = await searchParams;
   const query = resolvedParams.q;
   const limit = parseInt(resolvedParams.limit || "4", 10);
-  console.log("Search Query:", query);
-  console.log("Limit:", limit);
 
   let userNotes: { success: boolean; data: Note[]; error?: string } = {
     success: false,
@@ -39,7 +38,6 @@ export default async function HomePage({
   };
 
   userNotes = await getNotesByQueryAction(query, limit);
-  if(userNotes?.error) console.log(userNotes.error);
   return (
     <main className={styles.main}>
       <SignedOut>
@@ -62,6 +60,8 @@ export default async function HomePage({
             </Link>
           </header>
           <SearchBar />
+          {userNotes.error && <EmptyStateCard head="Database Error" body={userNotes.error} />}
+          {!userNotes.error && !userNotes.data.length && <EmptyStateCard head="No notes found" body="Create your first note to get started." />}
           <NotesGrid response={userNotes} />
         </section>
       </SignedIn>

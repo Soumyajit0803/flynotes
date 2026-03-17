@@ -1,0 +1,56 @@
+/* The Main Card Container */
+.emptyCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  min-height: 280px;
+  padding: 2rem;
+  border-radius: 8px; /* A tighter, more structural border radius */
+  
+  /* Pure black alphas for a clean, flat look */
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px dashed rgba(0, 0, 0, 0.15);
+  
+  transition: all 0.2s ease;
+}
+
+/* Subtle, purely functional hover state */
+.emptyCard:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Icon Styling */
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.04);
+  margin-bottom: 1.25rem;
+}
+
+.emptyIcon {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* Typography */
+.emptyTitle {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.9); /* Almost solid black for high readability */
+  margin: 0 0 0.5rem 0;
+}
+
+.emptyText {
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0, 0.5); /* Muted black for secondary text */
+  max-width: 280px;
+  line-height: 1.5;
+  margin: 0;
+}

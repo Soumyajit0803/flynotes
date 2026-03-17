@@ -27,8 +27,7 @@ export default function NoteCard({
   const matchPercentage = isSearchMatch
     ? Math.round(note.similarity! * 100)
     : 0;
-  console.log(matchPercentage)
-
+    
   // The "Immediate Revert" Problem: The setter function returned by useOptimistic is designed to be active only while an asynchronous update is "pending". If you call it outside of a transition, React will update the UI for a fraction of a second and then immediately revert it back to the original state because there is no ongoing background task to "hold" the optimistic value.
   // useOptimistic cannot function without a Transition (or an Action) because of how React manages temporary states.
 
@@ -59,7 +58,7 @@ export default function NoteCard({
         style={{ cursor: "pointer" }}
       >
         <div className={styles.header}>
-          <span className={styles.categoryBadge}>
+          <span className={styles.categoryBadge} style={{color: `var(--${note.category.toLowerCase()})`, backgroundColor: `var(--${note.category.toLowerCase()}-bg)`}}>
             <Tag size={12} />
             {note.category}
           </span>

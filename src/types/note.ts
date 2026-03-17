@@ -4,8 +4,8 @@ export interface Note {
   userId: string;
   title: string;
   content: string;
-  category: Category; // Match your categories
-  createdAt: Date; // Changed from number to Date
-  updatedAt: Date; // Changed from number to Date
-  similarity?: number;
+  category: Category;
+  createdAt: Date;
+  updatedAt: Date;
+  similarity?: number; // Optional field for search results
 }
