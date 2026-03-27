@@ -20,7 +20,7 @@ export default function NoteCard({
 }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   // 1. Check if this note was returned from a semantic search
   const isSearchMatch = note.similarity !== undefined;

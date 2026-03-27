@@ -2,16 +2,26 @@ import type { Metadata, Viewport } from "next";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/navbar/Navbar";
-import { ClerkProvider } from "@clerk/nextjs";
-import { Toaster } from 'sonner'
+import { Toaster } from "sonner";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Flynotes - Your Lightweight Note-Taking Companion",
-  description: "A fast, secure, and minimal note-taking app built for speed and simplicity. Capture your thoughts effortlessly with Flynotes.",
+  description:
+    "A fast, secure, and minimal note-taking app built for speed and simplicity. Capture your thoughts effortlessly with Flynotes.",
   applicationName: "Flynotes",
   authors: [{ name: "Soumyajit Karmakar" }],
   generator: "Next.js",
-  keywords: ["notes", "productivity", "nextjs", "clerk", "drizzle", "sonner", "react", "typescript"],
+  keywords: [
+    "notes",
+    "productivity",
+    "nextjs",
+    "clerk",
+    "drizzle",
+    "sonner",
+    "react",
+    "typescript",
+  ],
   referrer: "origin-when-cross-origin",
   icons: {
     icon: "/favicon.ico",
@@ -37,14 +47,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={`${geistMono.variable}`}>
+    <html lang="en">
+      <body className={`${geistMono.variable}`}>
+        <Providers>
           <Navbar />
           {children}
-          <Toaster richColors position="bottom-right" />
-        </body>
-      </html>
-    </ClerkProvider>
+        </Providers>
+        <Toaster richColors position="bottom-right" />
+      </body>
+    </html>
   );
 }

@@ -10,12 +10,13 @@
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.37.3",
+    "@auth/drizzle-adapter": "^1.11.1",
     "@google/generative-ai": "^0.24.1",
     "@neondatabase/serverless": "^1.0.2",
     "drizzle-orm": "^0.45.1",
     "lucide-react": "^0.563.0",
     "next": "16.1.6",
+    "next-auth": "^4.24.13",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "sonner": "^2.0.7"

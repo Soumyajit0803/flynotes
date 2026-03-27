@@ -1,19 +1,13 @@
-import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
-import NoteForm from "@/components/noteform/NoteForm";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getNoteByIdAction } from "@/lib/actions"; // Adjust import path if needed
+import NoteForm from "@/components/noteform/NoteForm"; // Example import for your UI
 import { Note } from "@/types/note";
-import { getNoteByIdAction } from "@/lib/actions";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const note = await getNoteByIdAction(id);
-
+export async function generateMetadata() {
   return {
-    title: note ? `Editing: ${note.title}` : "Note Not Found",
+    title: "Update Note",
   };
 }
 
@@ -22,22 +16,40 @@ export default async function UpdateNotePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  // Security: Get the current user
-  const { userId } = await auth();
+  // 1. Securely fetch the active NextAuth session
+  const session = await getServerSession(authOptions);
+  
+  // 2. Extract the database ID (powered by our next-auth.d.ts declaration)
+  const userId = session?.user?.id;
+
+  // 3. Gatekeeper: If no valid session exists, halt rendering
+  if (!userId) {
+    return (
+      <div style={{ padding: "2rem", textAlign: "center", color: "var(--foreground)" }}>
+        <h2>Authentication Required</h2>
+        <p>Please sign in to update your notes.</p>
+      </div>
+    );
+  }
+
+  // 4. Await the parameters and fetch the specific note
   const { id } = await params;
-  const note = await getNoteByIdAction(id);
+  const note = (await getNoteByIdAction(id)) as Note | null;
 
-  if (!userId) return <div>Please sign in.</div>;
-
-  // 4. If note doesn't exist, show 404
+  // 5. If the note doesn't exist (or doesn't belong to this userId), trigger the 404 UI
   if (!note) {
     notFound();
   }
 
+  // 6. Render your aesthetic update form, passing the secured note data
   return (
-    <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
-      {/* We pass the real database note to the form */}
-      <NoteForm initialData={note as Note} titleText="Edit Note" />
-    </div>
+    <main style={{ maxWidth: "800px", margin: "0 auto", padding: "2rem" }}>
+      <header style={{ marginBottom: "2rem" }}>
+        <h1 style={{ fontSize: "2rem", fontWeight: 600 }}>Edit Note</h1>
+      </header>
+      
+      <NoteForm initialData={note} titleText={note?.title} /> 
+     
+    </main>
   );
 }

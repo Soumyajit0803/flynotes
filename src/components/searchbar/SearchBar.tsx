@@ -1,8 +1,8 @@
 "use client";
 
-import { Search, Loader2, SlidersHorizontal, Sparkles } from "lucide-react";
+import { Search, Loader2, SlidersHorizontal } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect, useTransition } from "react";
+import { useState, useEffect, useTransition, useCallback } from "react";
 import styles from "./SearchBar.module.css";
 
 export default function SearchBar() {
@@ -15,7 +15,7 @@ export default function SearchBar() {
   const [isPending, startTransition] = useTransition();
 
   // 1. A helper function to build the new URL safely
-  const createQueryString = (name: string, value: string) => {
+  const createQueryString = useCallback((name: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     
     if (value) {
@@ -25,7 +25,7 @@ export default function SearchBar() {
     }
     
     return params.toString();
-  };
+  }, [searchParams]);
 
   // 2. Handle Text Search (Debounced)
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function SearchBar() {
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [query, router]); // Notice we don't include 'limit' here, so it doesn't re-fire unnecessarily
+  }, [query, router, createQueryString]); // Notice we don't include 'limit' here, so it doesn't re-fire unnecessarily
 
   // 3. Handle Limit Change (Instant)
   const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
