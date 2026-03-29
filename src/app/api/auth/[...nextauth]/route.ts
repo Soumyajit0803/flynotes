@@ -12,15 +12,29 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
+  session: {
+    strategy: "jwt",
+  },
   // 2. We add this callback to expose the database ID
   callbacks: {
-    session: async ({ session, user }) => {
-      if (session?.user) {
-        session.user.id = user.id; 
+    // 1. This runs the exact moment the user logs in
+    async jwt({ token, user }) {
+      if (user) {
+        // Grab the ID from the database user and attach it to the encrypted token
+        token.id = user.id; 
+      }
+      return token;
+    },
+    
+    // 2. This runs every time you call useSession() or getServerSession()
+    async session({ session, token }) {
+      if (session.user && token) {
+        // Grab the ID from the decrypted token and attach it to the final session object
+        session.user.id = token.id as string; 
       }
       return session;
-    },
-  },
+    }
+  }
 };
 
 const handler = NextAuth(authOptions);

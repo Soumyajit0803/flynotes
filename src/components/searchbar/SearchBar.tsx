@@ -29,6 +29,11 @@ export default function SearchBar() {
 
   // 2. Handle Text Search (Debounced)
   useEffect(() => {
+    // THE FIX: Check if the local state matches the URL. 
+    // If they are the same, do nothing and break the loop.
+    const currentUrlQuery = searchParams.get("q") || "";
+    if (query === currentUrlQuery) return;
+
     const delayDebounceFn = setTimeout(() => {
       startTransition(() => {
         router.push(`/?${createQueryString("q", query)}`);
@@ -36,7 +41,7 @@ export default function SearchBar() {
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [query, router, createQueryString]); // Notice we don't include 'limit' here, so it doesn't re-fire unnecessarily
+  }, [query, router, createQueryString, searchParams]); // Added searchParams for React exhaustive-deps safety
 
   // 3. Handle Limit Change (Instant)
   const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

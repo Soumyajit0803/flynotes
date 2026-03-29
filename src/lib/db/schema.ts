@@ -45,13 +45,13 @@ export const accounts = pgTable(
 );
 
 // 3. Active Sessions
-export const sessions = pgTable("session", {
-  sessionToken: text("sessionToken").primaryKey(),
-  userId: text("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
-});
+// export const sessions = pgTable("session", {
+//   sessionToken: text("sessionToken").primaryKey(),
+//   userId: text("userId")
+//     .notNull()
+//     .references(() => users.id, { onDelete: "cascade" }),
+//   expires: timestamp("expires", { mode: "date" }).notNull(),
+// });
 
 // 4. Magic Links (Required by the adapter even if you just use Google)
 export const verificationTokens = pgTable(
